@@ -62,8 +62,12 @@ class Main:
         root, ext = os.path.splitext(full_path)
         new_full_path = root + self.CONVERTED_EXT
         try:
-            ff = ffmpy.FFmpeg(inputs={full_path: None}, outputs={new_full_path: ['-ab', '160k']})
+            ff = ffmpy.FFmpeg(global_options='-loglevel panic', inputs={full_path: None}, outputs={new_full_path: ['-ab', '160k']})
             ff.run()
+            try:
+                os.remove(full_path)
+            except:
+                print('failed to delete source %s' % full_path)
             self.num_converted = self.num_converted + 1
         except:
             print('failed to convert %s' % full_path)
